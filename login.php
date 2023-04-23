@@ -5,12 +5,12 @@ include('includes/dbconnection.php');
 
 if(isset($_POST['login']))
   {
-    $adminuser=$_POST['username'];
+    $emailcon=$_POST['emailcont'];
     $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
+    $query=mysqli_query($con,"select ID from tblcompany where  (CompanyEmail='$emailcon' || MobileNumber='$emailcon') && Password='$password' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
-      $_SESSION['crmsaid']=$ret['ID'];
+      $_SESSION['crmscid']=$ret['ID'];
      header('location:dashboard.php');
     }
     else{
@@ -18,6 +18,7 @@ if(isset($_POST['login']))
     }
   }
   ?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -102,7 +103,7 @@ if(isset($_POST['login']))
                 <div class="col-lg-6 p-t-100">
                     <div class="text-white">
                         <h1>Welcome Back</h1>
-                        <p class="s-18 p-t-b-20 font-weight-lighter">Hey Buddies Welcome back to Campus Recruitment Management System AdminPanel !</p>
+                        <p class="s-18 p-t-b-20 font-weight-lighter">Hey Buddies Welcome back to Campus Recruitment Management!</p>
                     </div>
                    <form method="post" action="">
                     <p style="font-size:16px; color:red" align="center"> <?php if($msg){
@@ -111,8 +112,7 @@ if(isset($_POST['login']))
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group has-icon"><i class="icon-user-o"></i>
-                                    <input type="text" class="form-control form-control-lg no-b"
-                                          name="username" id="username" placeholder="Username" required="true">
+                                          <input class="form-control form-control-lg no-b" type="text" id="email" name="emailcont" required="true" placeholder="Registered Email or Contact Number">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -123,7 +123,7 @@ if(isset($_POST['login']))
                             </div>
                             <div class="col-lg-12">
                                 <input type="submit" class="btn btn-success btn-lg btn-block" name="login" value="Let me enter">
-                                <p class="forget-pass text-white"><a href="forgot-password.php"> Have you forgot your password ?</a></p>
+                                <p class="forget-pass text-white"><a href="forgot-password.php"> Have you forgot your password ?</a>  <a href="comp-signup.php" style="padding-left: 250px"> Sign Up!!</a></p>
                                 <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p>
                             </div>
                         </div>

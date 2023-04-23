@@ -1,35 +1,18 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['crmscid']==0)) {
   header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
-$compid=$_SESSION['crmscid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tblcompany where ID='$compid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tblcompany set Password='$newpassword' where ID='$compid'");
-$msg= "Your password successully changed"; 
-} else {
-
-$msg="Your current password is wrong";
-}
 
 
-
-}
-
-  
-?>
+  ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Campus Recruitment Management System-Change Password</title>
+   
+    <title>Campus Recruitment Management System-Education Detail</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -50,19 +33,6 @@ $msg="Your current password is wrong";
             left: 50%;
         }
     </style>
-    <script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
 </head>
 <body class="light">
 <!-- Pre loader -->
@@ -122,7 +92,7 @@ return true;
                 <div class="col">
                     <h4>
                         <i class="icon-package"></i>
-                        Change Password
+                        View Education Detail
                     </h4>
                 </div>
             </div>
@@ -134,51 +104,85 @@ return true;
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                   
+                    
                         <div class="card-body b-b">
-                            <form method="post" name="changepassword" onsubmit="return checkpass();" action="">
-                                <p style="font-size:16px; color:red" align="center"> <?php if($msg){
-    echo $msg;
-  }  ?> </p>
+                            <p>View Education Detail</p>
+                        </div>
+                        <div class="card-body b-b">
+                           
   <?php
-$compid=$_SESSION['crmscid'];
-$ret=mysqli_query($con,"select * from tblcompany where ID='$compid'");
+ $edid=$_GET['eduid'];
+$ret=mysqli_query($con,"select tbluser.ID, tbleducation.UserID,tbleducation.SecondaryBoard,tbleducation.SecondaryBoardyop,tbleducation.SecondaryBoardper,tbleducation.SecondaryBoardcgpa,tbleducation.SSecondaryBoard,tbleducation.SSecondaryBoardyop,tbleducation.SSecondaryBoardper,tbleducation.SSecondaryBoardcgpa,tbleducation.GraUni,tbleducation.GraUniyop,tbleducation.GraUnidper,tbleducation.GraUnicgpa,tbleducation.PGUni,tbleducation.PGUniyop,tbleducation.PGUniper,tbleducation.PGUnicgpa,tbleducation.ExtraCurriculars,tbleducation.OtherAchivement  from   tbleducation join tbluser on tbleducation.UserID=tbluser.ID where tbleducation.UserID='$edid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4" class="col-form-label">Current Password</label>
-                                        <input type="password" name="currentpassword" class="form-control" required= "true" value="">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="inputPassword4" class="col-form-label">New Password</label>
-                                        <input type="password" name="newpassword" class="form-control" value="" required="true">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputAddress" class="col-form-label">Confirm Password</label>
-                                    <input type="password" name="confirmpassword" class="form-control" value="" required="true">
-                                </div>
-                                
-                               <?php } ?>
-                               
-                                <button type="submit" name="submit" class="btn btn-primary">Change</button>
-                            </form>
+<table class="table table-bordered table-hover data-tables">
+  
+<tr>
+  <th>#</th>
+   <th>Board / University</th>
+    <th>Year</th>
+     <th>Percentage</th>
+       <th>CGPA</th>
+
+</tr>
+<tr>
+<th>10th(Secondary)</th>
+<td><?php  echo $row['SecondaryBoard'];?></td>
+<td><?php  echo $row['SecondaryBoardyop'];?></td>
+<td><?php  echo $row['SecondaryBoardper'];?></td>
+<td><?php  echo $row['SecondaryBoardcgpa'];?></td>
+</tr>
+<tr>
+<th>12th(Senior Secondary)</th>
+<td><?php  echo $row['SSecondaryBoard'];?></td>
+<td><?php  echo $row['SSecondaryBoardyop'];?></td>
+<td><?php  echo $row['SSecondaryBoardper'];?></td>
+<td><?php  echo $row['SSecondaryBoardcgpa'];?></td>
+</tr>
+<tr>
+<th>Graduation</th>
+<td><?php  echo $row['GraUni'];?></td>
+<td><?php  echo $row['GraUniyop'];?></td>
+<td><?php  echo $row['GraUnidper'];?></td>
+<td><?php  echo $row['GraUnicgpa'];?></td>
+
+</tr>
+<tr>
+<th>Post Graduation</th>
+<td><?php  echo $row['PGUni'];?></td>
+<td><?php  echo $row['PGUniyop'];?></td>
+<td><?php  echo $row['PGUniper'];?></td>
+<td><?php  echo $row['PGUnicgpa'];?></td>
+</tr>
+
+</table>
+<table class="table table-bordered table-hover data-tables">
+    <tr>
+<th>Extra Curriculars</th>
+<td> <?php  echo $row['ExtraCurriculars'];?></td>
+</tr>
+<tr>
+<th>Other Achivement/Certificate/Qualification</th>
+<td><?php  echo $row['OtherAchivement'];?></td>
+</tr>
+</table>
+<?php } ?>
                         </div>
-                
+              
                     </div>
                 </div>
-         
+             
             </div>
         </div>
     </div>
 </div>
+
 <div class="control-sidebar-bg shadow white fixed"></div>
 </div>
 <!--/#app -->
 <script src="assets/js/app.js"></script>
 </body>
 </html>
-<?php } ?>
+<?php }  ?>

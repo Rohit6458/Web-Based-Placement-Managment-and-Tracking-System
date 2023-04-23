@@ -6,13 +6,14 @@ if (strlen($_SESSION['crmscid']==0)) {
   header('location:logout.php');
   } else{
 
-  
+
 
   ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Campus Recruitment Management System-Vacancy dates reports</title>
+    
+    <title>Campus Recruitment Management System-Sort Listed Applications</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -85,54 +86,74 @@ if (strlen($_SESSION['crmscid']==0)) {
 <?php include_once('includes/sidebar.php');?>
 <!--Sidebar End-->
 <?php include_once('includes/header.php');?>
-    <div class="page has-sidebar-left">
-    <header class="blue accent-3 relative">
+<div class="page has-sidebar-left bg-light height-full">
+    <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
-            <div class="row p-t-b-10 ">
+            <div class="row">
                 <div class="col">
-                    <h4>
-                        <i class="icon-package"></i>
-                        Vacancy dates reports
-                    </h4>
+                    <h3 class="my-3">
+                        Sort Listed Applications
+                    </h3>
                 </div>
             </div>
         </div>
     </header>
+    <div class="container-fluid my-3">
+        <div class="row">
+            <div class="col-md-12">
+              
+                <div class="card my-3 no-b">
+                    <div class="card-body">
+                        <div class="card-title">Sort Listed Applications</div>
+                        <table class="table table-bordered table-hover data-tables"
+                               data-options='{ "paging": false; "searching":false}'>
+                            <thead>
+                             <tr>
+                  <th>S.NO</th>
+            
+                  <th>Job Title</th>
+                    <th>Job Posting Date</th>
+                    <th>Job Applied By</th>       
+                   <th>Action</th>
+                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                               $cid=$_SESSION['crmscid'];
+$ret=mysqli_query($con,"select tblapplyjob.ID,tblvacancy.JobTitle,tblvacancy.JobpostingDate,tbluser.FullName,tblapplyjob.Status from  tblapplyjob join tbluser on tblapplyjob.UserId=tbluser.ID join tblvacancy on tblapplyjob.JobId=tblvacancy.ID  where tblvacancy.CompanyID='$cid' && tblapplyjob.Status='Sorted'");
+$cnt=1;
+while ($row=mysqli_fetch_array($ret)) {
 
-    <div class="animatedParent animateOnce">
-        <div class="container-fluid my-3">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                   
-                        <div class="card-body b-b">
-                            <form method="post" name=""  action="vacancydates-reports-details.php">
-                                   <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4" class="col-form-label">From Date</label>
-                                        <input type="date" class="form-control" name="fromdate" id="fromdate" value="" required='true'>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4" class="col-form-label">To Date</label>
-                                        <input type="date" class="form-control" name="todate" id="todate" value="" required='true'>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                        </div>
-                
+?>
+                           <tr>
+                  <td><?php echo $cnt;?></td>
+            
+                  <td><?php  echo $row['JobTitle'];?></td>
+                  <td><?php  echo $row['JobpostingDate'];?></td>
+                  <td><?php  echo $row['FullName'];?></td>
+                  <td><a href="view-applied-apllications.php?viewid=<?php echo $row['ID'];?>">View Details</a></td>
+                </tr>
+                <?php 
+$cnt=$cnt+1;
+}?>
+                          
+                            </tbody>
+                           
+                        </table>
                     </div>
                 </div>
-         
             </div>
+
         </div>
     </div>
 </div>
+
+<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
 <div class="control-sidebar-bg shadow white fixed"></div>
 </div>
 <!--/#app -->
 <script src="assets/js/app.js"></script>
 </body>
 </html>
-<?php } ?>
+<?php }  ?>

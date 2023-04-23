@@ -1,35 +1,44 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['crmscid']==0)) {
   header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
+    if(isset($_POST['submit']))
+  {
+   $cid=$_GET['editid'];
+    $complogo=$_FILES["comlogo"]["name"];
+$extension = substr($complogo,strlen($complogo)-4,strlen($complogo));
+// allowed extensions
+$allowed_extensions = array(".jpg","jpeg",".png",".gif");
+   // Validation for allowed extensions .in_array() function searches an array for a specific value.
+if(!in_array($extension,$allowed_extensions))
 {
-$compid=$_SESSION['crmscid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tblcompany where ID='$compid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tblcompany set Password='$newpassword' where ID='$compid'");
-$msg= "Your password successully changed"; 
-} else {
-
-$msg="Your current password is wrong";
+echo "<script>alert('Featured image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
 }
 
+else
+{
+//rename company logo
+$logo=md5($complogo).time().$extension;
 
-
+     move_uploaded_file($_FILES["comlogo"]["tmp_name"],"images/".$logo);
+     $query=mysqli_query($con, "update tblcompany set CompanyLogo ='$logo' where ID='$cid'");
+    if ($query) {
+    $msg="Company logo has been updated.";
+  }
+  else
+    {
+      $msg="Something Went Wrong. Please try again.";
+    }
+  }
 }
-
-  
-?>
+  ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Campus Recruitment Management System-Change Password</title>
+    <title>Campus Recruitment Management System-Change Company Logo</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -50,19 +59,6 @@ $msg="Your current password is wrong";
             left: 50%;
         }
     </style>
-    <script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
 </head>
 <body class="light">
 <!-- Pre loader -->
@@ -122,7 +118,7 @@ return true;
                 <div class="col">
                     <h4>
                         <i class="icon-package"></i>
-                        Change Password
+                        Company Logo
                     </h4>
                 </div>
             </div>
@@ -136,35 +132,28 @@ return true;
                     <div class="card">
                    
                         <div class="card-body b-b">
-                            <form method="post" name="changepassword" onsubmit="return checkpass();" action="">
+                            <form method="post" enctype="multipart/form-data">
                                 <p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
   <?php
-$compid=$_SESSION['crmscid'];
-$ret=mysqli_query($con,"select * from tblcompany where ID='$compid'");
+ $eid=$_GET['editid'];
+$ret=mysqli_query($con,"select * from tblcompany where ID='$eid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4" class="col-form-label">Current Password</label>
-                                        <input type="password" name="currentpassword" class="form-control" required= "true" value="">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="inputPassword4" class="col-form-label">New Password</label>
-                                        <input type="password" name="newpassword" class="form-control" value="" required="true">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="inputAddress2" class="col-form-label">Company Logo</label>
+                                    <img src="images/<?php echo $row['CompanyLogo'];?>" width="100" height="100" value="<?php  echo $row['CompanyLogo'];?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputAddress" class="col-form-label">Confirm Password</label>
-                                    <input type="password" name="confirmpassword" class="form-control" value="" required="true">
-                                </div>
-                                
+                                            <label for="inputAddress2" class="col-form-label">New Company Logo</label>
+                                            <input type="file" class="form-control" name="comlogo" required='true'>
+                                        </div>
                                <?php } ?>
                                
-                                <button type="submit" name="submit" class="btn btn-primary">Change</button>
+                                <button type="submit" name="submit" class="btn btn-primary">Update</button>
                             </form>
                         </div>
                 
