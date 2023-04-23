@@ -3,13 +3,13 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 error_reporting(0);
-if (strlen($_SESSION['crmscid']==0)) {
+if (strlen($_SESSION['crmsuid']==0)) {
   header('location:logout.php');
   } else{ ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Campus Recruitment Management System-Company Dashboard</title>
+    <title>Campus Recruitment Management System-User Dashboard</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -89,59 +89,64 @@ if (strlen($_SESSION['crmscid']==0)) {
         <div class="animated fadeInUpShort">
             <div class="card">
                 <div class="card-header white">
-                    <h6> Company Dashboard </h6>
+                    <h6>Dashboard </h6>
                 </div>
                 <div class="card-body p-0">
                     <div class="lightSlider" data-item="5" data-item-xl="4" data-item-md="2" data-item-sm="1" data-pause="7000" data-pager="false" data-auto="true"
                          data-loop="true">
                         <div class="p-5 bg-primary text-white">
-                            <?php 
-$cid=$_SESSION['crmscid'];
-                    $query=mysqli_query($con,"Select * from  tblvacancy where CompanyID='$cid'");
-$vaccounts=mysqli_num_rows($query);
-?>
-                            <h5 class="font-weight-normal s-14">Total Vacancy Posted</h5>
-                            <span class="s-48 font-weight-lighter text-primary"><?php echo $vaccounts;?></span>
-                          
+                            <?php
+                           $uid=$_SESSION['crmsuid'];
+//todays applied Jobs
+ $query=mysqli_query($con,"select ID from tblapplyjob where UserId='$uid' && date(ApplyDate)=CURDATE();");
+$count_today_appjob=mysqli_num_rows($query);
+ ?> 
+                            <h5 class="font-weight-normal s-14">Today's Applied Jobs</h5>
+                            <span class="s-48 font-weight-lighter text-primary"><?php echo $count_today_appjob;?></span>
+                            
                         </div>
                         <div class="p-5">
-                            <?php 
-
-                    $query1=mysqli_query($con,"Select * from  tblapplyjob join tblvacancy on  tblvacancy.ID=tblapplyjob.JobId where tblvacancy.CompanyID='$cid'");
-$totalapplications=mysqli_num_rows($query1);
-?>
-                            <h5 class="font-weight-normal s-14">Total No. of Applications</h5>
-                            <span class="s-48 font-weight-lighter light-green-text"><?php echo $totalapplications;?></span>
+                            <?php
+                           $uid=$_SESSION['crmsuid'];
+//Yesterday applied Jobs
+ $query1=mysqli_query($con,"select ID from tblapplyjob where UserId='$uid' && date(ApplyDate)=DATE(NOW()) - INTERVAL 1 DAY");
+$count_yday_appjob=mysqli_num_rows($query1);
+ ?> 
+                            <h5 class="font-weight-normal s-14">Yesterday Applied Jobs</h5>
+                            <span class="s-48 font-weight-lighter light-green-text"><?php echo $count_yday_appjob;?></span>
                             
                         </div>
                         <div class="p-5 light">
-                             <?php 
-
-                    $query2=mysqli_query($con,"Select * from  tblapplyjob join tblvacancy on  tblvacancy.ID=tblapplyjob.JobId where tblvacancy.CompanyID='$cid' and tblapplyjob.Status is null");
-$totalnewapp=mysqli_num_rows($query2);
-?>
-                            <h5 class="font-weight-normal s-14">Total No.of New Application</h5>
-                            <span class="s-48 font-weight-lighter text-primary"><?php echo $totalnewapp;?></span>
-                            
-                        </div>
-                        <div class="p-5">
-                            <?php 
-
-                    $query3=mysqli_query($con,"Select * from  tblapplyjob join tblvacancy on  tblvacancy.ID=tblapplyjob.JobId where tblvacancy.CompanyID='$cid' and tblapplyjob.Status='Selected'");
-$totalselapp=mysqli_num_rows($query3);
-?>
-                            <h5 class="font-weight-normal s-14">Total No.of Selected Application</h5>
-                            <span class="s-48 font-weight-lighter amber-text"><?php echo $totalselapp;?></span>
+                            <?php
+                           $uid=$_SESSION['crmsuid'];
+//Last Sevendays applied Jobs
+ $query2=mysqli_query($con,"select ID from tblapplyjob where UserId='$uid' && date(ApplyDate)=DATE(NOW()) - INTERVAL 7 DAY");
+$count_sevenday_appjob=mysqli_num_rows($query2);
+ ?> 
+                            <h5 class="font-weight-normal s-14">Last 7 Days Applied Jobs</h5>
+                            <span class="s-48 font-weight-lighter text-primary"><?php echo $count_sevenday_appjob;?></span>
                            
                         </div>
+                        <div class="p-5">
+                            <?php
+                           $uid=$_SESSION['crmsuid'];
+//Total applied Jobs
+ $query3=mysqli_query($con,"select ID from tblapplyjob where UserId='$uid'");
+$count_total_appjob=mysqli_num_rows($query3);
+ ?>
+                            <h5 class="font-weight-normal s-14">Total Applied Jobs</h5>
+                            <span class="s-48 font-weight-lighter amber-text"><?php echo $count_total_appjob;?></span>
+                            
+                        </div>
                         <div class="p-5 light">
-                            <?php 
-
-                    $query4=mysqli_query($con,"Select * from  tblapplyjob join tblvacancy on  tblvacancy.ID=tblapplyjob.JobId where tblvacancy.CompanyID='$cid' and tblapplyjob.Status='Rejected'");
-$totalrejapp=mysqli_num_rows($query4);
-?>
-                            <h5 class="font-weight-normal s-14">Total No.of Rejected Application</h5>
-                            <span class="s-48 font-weight-lighter text-indigo"><?php echo $totalrejapp;?></span>
+                            <?php
+                           $uid=$_SESSION['crmsuid'];
+//Total Vacancy
+ $query4=mysqli_query($con,"select ID from tblvacancy");
+$count_total_vacancy=mysqli_num_rows($query4);
+ ?>
+                            <h5 class="font-weight-normal s-14">Total Vacancy</h5>
+                            <span class="s-48 font-weight-lighter text-indigo"><?php echo $count_total_vacancy;?></span>
                             
                         </div>
                        

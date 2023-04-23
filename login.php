@@ -7,11 +7,12 @@ if(isset($_POST['login']))
   {
     $emailcon=$_POST['emailcont'];
     $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tblcompany where  (CompanyEmail='$emailcon' || MobileNumber='$emailcon') && Password='$password' ");
+    $query=mysqli_query($con,"select ID,FullName from tbluser where  (Email='$emailcon' || MobileNumber='$emailcon') && Password='$password' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
-      $_SESSION['crmscid']=$ret['ID'];
-     header('location:dashboard.php');
+      $_SESSION['crmsuid']=$ret['ID'];
+       $_SESSION['fname']=$ret['FullName'];
+     header('location:../index.php');
     }
     else{
     $msg="Invalid Details.";
@@ -123,7 +124,7 @@ if(isset($_POST['login']))
                             </div>
                             <div class="col-lg-12">
                                 <input type="submit" class="btn btn-success btn-lg btn-block" name="login" value="Let me enter">
-                                <p class="forget-pass text-white"><a href="forgot-password.php"> Have you forgot your password ?</a>  <a href="comp-signup.php" style="padding-left: 250px"> Sign Up!!</a></p>
+                                <p class="forget-pass text-white"><a href="forgot-password.php"> Have you forgot your password ?</a><a href="user-signup.php" style="padding-left: 250px"> Sign Up!!</a></p>
                                 <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p>
                             </div>
                         </div>

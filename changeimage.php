@@ -2,43 +2,49 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['crmscid']==0)) {
+if (strlen($_SESSION['crmsuid']==0)) {
   header('location:logout.php');
   } else{
     if(isset($_POST['submit']))
   {
-   $cid=$_GET['editid'];
-    $complogo=$_FILES["comlogo"]["name"];
-$extension = substr($complogo,strlen($complogo)-4,strlen($complogo));
+   $eid=$_GET['editid'];
+    //Image
+$pic=$_FILES["image"]["name"];
+$extension = substr($pic,strlen($pic)-4,strlen($pic));
+
 // allowed extensions
 $allowed_extensions = array(".jpg","jpeg",".png",".gif");
-   // Validation for allowed extensions .in_array() function searches an array for a specific value.
+// Validation for allowed extensions .in_array() function searches an array for a specific value.
 if(!in_array($extension,$allowed_extensions))
 {
-echo "<script>alert('Featured image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
+echo "<script>alert('image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
 }
 
 else
 {
-//rename company logo
-$logo=md5($complogo).time().$extension;
+//rename property images
+$stupic=md5($pic).time().$extension;
 
-     move_uploaded_file($_FILES["comlogo"]["tmp_name"],"images/".$logo);
-     $query=mysqli_query($con, "update tblcompany set CompanyLogo ='$logo' where ID='$cid'");
+     move_uploaded_file($_FILES["image"]["tmp_name"],"images/".$stupic);
+   
+
+    $query=mysqli_query($con,"update tbluser set Image='$stupic' where ID='$eid'");
+  
     if ($query) {
-    $msg="Company logo has been updated.";
+    $msg="Image has been updated.";
   }
   else
     {
-      $msg="Something Went Wrong. Please try again.";
+      $msg="Something Went Wrong. Please try again";
     }
+
   }
-}
+ }
   ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Campus Recruitment Management System-Change Company Logo</title>
+    <title>Campus Recruitment Management System-Upload Image</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -118,7 +124,7 @@ $logo=md5($complogo).time().$extension;
                 <div class="col">
                     <h4>
                         <i class="icon-package"></i>
-                        Company Logo
+                        Upload Image
                     </h4>
                 </div>
             </div>
@@ -137,20 +143,32 @@ $logo=md5($complogo).time().$extension;
     echo $msg;
   }  ?> </p>
   <?php
- $eid=$_GET['editid'];
-$ret=mysqli_query($con,"select * from tblcompany where ID='$eid'");
+$uid=$_SESSION['crmsuid'];
+$ret=mysqli_query($con,"select * from tbluser where ID='$uid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="inputEmail4" class="col-form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullname" name="fullname" value="<?php  echo $row['FullName'];?>" readon;y='true'>
+                                    </div>
+                                    
+                                </div>
+                               
+                             
+                  
                                 <div class="form-group">
-                                    <label for="inputAddress2" class="col-form-label">Company Logo</label>
-                                    <img src="images/<?php echo $row['CompanyLogo'];?>" width="100" height="100" value="<?php  echo $row['CompanyLogo'];?>">
+                                    <label for="inputAddress2" class="col-form-label">Photo</label>
+                                    <img src="images/<?php echo $row['Image'];?>" width="200" height="150">
                                 </div>
                                 <div class="form-group">
-                                            <label for="inputAddress2" class="col-form-label">New Company Logo</label>
-                                            <input type="file" class="form-control" name="comlogo" required='true'>
-                                        </div>
+                                    <label for="inputAddress2" class="col-form-label">My Photo</label>
+                                    <input type="file" class="form-control" name="image" required='true'>
+                                </div>
+                                
+                               
                                <?php } ?>
                                
                                 <button type="submit" name="submit" class="btn btn-primary">Update</button>

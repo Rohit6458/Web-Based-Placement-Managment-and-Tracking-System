@@ -1,57 +1,21 @@
-<?php
+<?php  
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 if (strlen($_SESSION['crmsuid']==0)) {
   header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
 
+ //update for mesaage
+$vid=$_GET['viewid'];
+ $ret=mysqli_query($con,"update tblmessage set IsRead='1' where AppID='$vid'");   
 
-
-$jobid=$_GET['viewid'];
-$userid= $_SESSION['crmsuid'];
-$resume=$_FILES["resume"]["name"];
-$ret=mysqli_query($con, "select UserId from tblapplyjob where UserId='$userid' && JobId='$jobid'");
-    $result=mysqli_fetch_array($ret);
-    if($result>0){
-echo "<script>alert('Already Applied for this job');</script>"; 
-    }
-    else{
-
-$extension = substr($resume,strlen($resume)-4,strlen($resume));
-// allowed extensions
-$allowed_extensions = array(".docs",".pdf",".doc");
-// Validation for allowed extensions .in_array() function searches an array for a specific value.
-if(!in_array($extension,$allowed_extensions))
-{
-echo "<script>alert('Resume has Invalid format. docs and pdf format allowed');</script>";
-}
-else
-{
-//rename property images
-$candresume=md5($pic).time().$extension;
-move_uploaded_file($_FILES["resume"]["tmp_name"],"images/".$candresume);
-
-
-$query=mysqli_query($con,"insert into tblapplyjob(UserId,JobId,Resume) values('$userid','$jobid','$candresume') ");
-if($query)
-{
- echo "<script>alert('You are succesfully apply for this job');</script>";   
-} else {
- echo "<script>alert('Something went wrong.');</script>";      
-}
-}
-}
-}
-
-  ?>
+?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
    
-    <title>Campus Recruitment Management System-Vacancy Detail</title>
+    <title>Campus Recruitment Management System-History of applied Jobs</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -131,7 +95,7 @@ if($query)
                 <div class="col">
                     <h4>
                         <i class="icon-package"></i>
-                        View Vacancy Detail
+                        History of applied Jobs
                     </h4>
                 </div>
             </div>
@@ -145,78 +109,146 @@ if($query)
                     <div class="card">
                     
                         <div class="card-body b-b">
-                            <p>View Vacancy Detail</p>
+                            <p>History of applied Jobs</p>
                         </div>
                         <div class="card-body b-b">
                            
-  <?php
- $edid=$_GET['viewid'];
-$ret=mysqli_query($con,"select tblcompany.ID as cid,tblcompany.CompanyName,tblvacancy.ID,tblvacancy.JobTitle,tblvacancy.JobpostingDate,tblvacancy.MonthlySalary,tblvacancy.JobDescriptions,tblvacancy.JobLocation,tblvacancy.NoofOpenings,tblvacancy.ApplyDate,tblvacancy.LastDate from tblcompany join  tblvacancy on tblcompany.ID=tblvacancy.CompanyID where tblvacancy.ID='$edid'");
+ <?php
+$vid=$_GET['viewid'];
+$ret=mysqli_query($con,"select 
+  tblvacancy.ID,
+  tblvacancy.JobTitle,
+  tblvacancy.MonthlySalary,
+  tblvacancy.JobDescriptions,
+  tblvacancy.NoofOpenings,
+  tblvacancy.JobLocation,
+  tblvacancy.ApplyDate,tblvacancy.LastDate,tblapplyjob.ID,tblapplyjob.Resume,tblapplyjob.Message,tblapplyjob.Remark,tblapplyjob.Status,tbluser.ID as uid ,tbluser.FullName,tbluser.Email,tbluser.MobileNumber,tbluser.StudentID,tbluser.Gender,tbluser.Address,tbluser.Age,tbluser.DOB,tbluser.Image,tblapplyjob.Status,tblapplyjob.Resume,tblapplyjob.Message,tblapplyjob.Remark,tblcompany.CompanyName from  tblapplyjob join tbluser on tblapplyjob.UserId=tbluser.ID join tblvacancy on tblapplyjob.JobId=tblvacancy.ID join tblcompany on tblcompany.ID=tblvacancy.CompanyID where  tblapplyjob.ID='$vid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-
 <table class="table table-bordered table-hover data-tables">
     <tr>
   <th width="200">Job Title</th>
   <td><?php  echo $row['JobTitle'];?></td>
+ 
   <th>Company Name</th>
   <td><?php  echo $row['CompanyName'];?></td>
+  </tr>
+  <tr>
+  <th>Monthly In-hand Salary</th>
+  <td colspan="3"><?php  echo $row['MonthlySalary'];?></td>
   </tr>
    <tr>
   <th>Job Descriptions</th>
   <td colspan="3"><?php  echo $row['JobDescriptions'];?></td>
   </tr>
-
   <tr>
-  <th>Monthly In-hand Salary</th>
-  <td><?php  echo $row['MonthlySalary'];?></td>
   <th>Job Location</th>
   <td><?php  echo $row['JobLocation'];?></td>
+
+  <th>No of Opening</th>
+  <td><?php  echo $row['NoofOpenings'];?></td>
   </tr>
   <tr>
-  <th>No of Opening</th>
-  <td colspan="3"><?php  echo $row['NoofOpenings'];?></td>
-</tr>
   <th>Apply Date</th>
-  <td><?php  echo $adate=$row['ApplyDate'];?></td>
-
+  <td><?php  echo $row['ApplyDate'];?></td>
   <th>Last Date</th>
-  <td><?php  echo $ldate=$row['LastDate'];?></td>
+  <td><?php  echo $row['LastDate'];?></td>
+  </tr>
+  <p>Information of Candidate</p>
+  <tr>
+  <th>Full Name</th>
+  <td><?php  echo $row['FullName'];?></td>
+  <th>Email</th>
+  <td><?php  echo $row['Email'];?></td>
+  </tr>
+  <tr>
+  <th>Mobile Number</th>
+  <td><?php  echo $row['MobileNumber'];?></td>
+  <th>Student ID </th>
+  <td><?php  echo $row['StudentID'];?></td>
+  </tr>
+  <tr>
+  <th>Gender </th>
+  <td><?php  echo $row['Gender'];?></td>
+  <th>Address </th>
+  <td><?php  echo $row['Address'];?></td>
+</tr>
+<tr>
+  <th>Age </th>
+  <td><?php  echo $row['Age'];?></td>
+
+  <th>DOB </th>
+  <td><?php  echo $row['DOB'];?></td>
+</tr>
+<tr>
+  <th>Image </th>
+  <td><img src="images/<?php echo $row['Image'];?>" width="200" height="150" value="<?php  echo $row['Image'];?>"></td>
+  
+  <th>Education Detail </th>
+  <td><a href="view-education-detail.php?eduid=<?php echo $row['uid'];?>" target="_blank">My Education Details</a></td>
+</tr>
+<tr>
+  <th>Resume </th>
+  <td> <a href ="images/<?php echo $row['Resume'];?>" width="200" height="150" value="<?php  echo $row['Resume'];?>" target="_blank">Download</a></td>
+
+    <th>Status</th>
+    <td> <?php  
+if($row['Status']=="")
+{
+  echo "Not Responded Yet";
+}
+else
+{
+  echo $pstatus=$row['Status'];
+}
+
+     ;?></td>
   </tr>
 </table>
-<?php } ?>
-<table class="table table-bordered table-hover data-tables">
-<form method="post" name="submit" enctype="multipart/form-data">
-  
-                                
-                               
-                                
-<tr>
-    <th>Upload Resume :</th>
-    <td>
-    <input type='file' name="resume" placeholder="resume" rows="12" cols="14" class="form-control wd-450" required="true"></td>
-  </tr>
-  
-<?php
-$cdate=date('Y-m-d');
-$aadate = date("Y-m-d", strtotime($adate));
-$lldate = date("Y-m-d", strtotime($ldate));
-if(($cdate > $aadate) and ($cdate < $lldate ))
-{
-?>
+<?php  if($row['Status']!='0'){
+$ret=mysqli_query($con,"select  tblmessage.Message,tblmessage.Status as comstatus,tblmessage.ResponseDate from tblapplyjob  left join tblmessage on tblmessage.AppID=tblapplyjob.ID where tblapplyjob.ID='$vid'");
+$cnt=1;
+
+
+ ?>
+<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
   <tr align="center">
-    <td colspan="2"><button type="submit" name="submit" class="btn btn-primary">Apply Now</button></td>
+   <th colspan="4" >Message History</th> 
   </tr>
-<?php } else {?>
   <tr>
-<th colspan="2" style="text-align:center; font-weight:bold; color:red; font-size:22px;">Job Expired</tthd>
-  </tr>
-<?php } ?>
-  </form>
-  </table>
-                        </div>
+    <th>#</th>
+<th>Message</th>
+<th>Status</th>
+<th>Time</th>
+</tr>
+<?php  
+while ($row=mysqli_fetch_array($ret)) { 
+  ?>
+<tr>
+  <td><?php echo $cnt;?></td>
+ <td><?php  echo $row['Message'];?></td> 
+  <td><?php  echo $row['comstatus'];?></td> 
+   <td><?php  echo $row['ResponseDate'];?></td> 
+</tr>
+<?php $cnt=$cnt+1;} ?>
+</table>
+<?php  }?>
+
+ 
+
+
+                                 
+                            
+                          </div>
+                       
+                  </div>
+                </div>
+                            
+                                </div>
+                                
+                              </div>
               
                     </div>
                 </div>
@@ -232,4 +264,4 @@ if(($cdate > $aadate) and ($cdate < $lldate ))
 <script src="assets/js/app.js"></script>
 </body>
 </html>
-<?php }  ?>
+<?php } } ?>

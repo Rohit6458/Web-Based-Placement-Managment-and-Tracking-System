@@ -2,18 +2,18 @@
 session_start();
 include('includes/dbconnection.php');
 error_reporting(0);
-if (strlen($_SESSION['crmscid']==0)) {
+if (strlen($_SESSION['crmsuid']==0)) {
   header('location:logout.php');
   } else{
 if(isset($_POST['submit']))
 {
-$compid=$_SESSION['crmscid'];
+$uid=$_SESSION['crmsuid'];
 $cpassword=md5($_POST['currentpassword']);
 $newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tblcompany where ID='$compid' and   Password='$cpassword'");
+$query=mysqli_query($con,"select ID from tbluser where ID='$uid' and   Password='$cpassword'");
 $row=mysqli_fetch_array($query);
 if($row>0){
-$ret=mysqli_query($con,"update tblcompany set Password='$newpassword' where ID='$compid'");
+$ret=mysqli_query($con,"update tbluser set Password='$newpassword' where ID='$uid'");
 $msg= "Your password successully changed"; 
 } else {
 
@@ -141,8 +141,8 @@ return true;
     echo $msg;
   }  ?> </p>
   <?php
-$compid=$_SESSION['crmscid'];
-$ret=mysqli_query($con,"select * from tblcompany where ID='$compid'");
+$uid=$_SESSION['crmsuid'];
+$ret=mysqli_query($con,"select * from tbluser where ID='$uid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 

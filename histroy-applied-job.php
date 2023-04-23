@@ -7,12 +7,13 @@ if (strlen($_SESSION['crmsuid']==0)) {
   } else{
 
 
+
   ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-   
-    <title>Campus Recruitment Management System-Education Detail</title>
+    
+    <title>Campus Recruitment Management System-History of applied Jobs</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -85,100 +86,72 @@ if (strlen($_SESSION['crmsuid']==0)) {
 <?php include_once('includes/sidebar.php');?>
 <!--Sidebar End-->
 <?php include_once('includes/header.php');?>
-    <div class="page has-sidebar-left">
-    <header class="blue accent-3 relative">
+<div class="page has-sidebar-left bg-light height-full">
+    <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
-            <div class="row p-t-b-10 ">
+            <div class="row">
                 <div class="col">
-                    <h4>
-                        <i class="icon-package"></i>
-                        View Education Detail
-                    </h4>
+                    <h3 class="my-3">
+                        History of applied Jobs</h3>
                 </div>
             </div>
         </div>
     </header>
-
-    <div class="animatedParent animateOnce">
-        <div class="container-fluid my-3">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                    
-                        <div class="card-body b-b">
-                            <p>View Education Detail</p>
-                        </div>
-                        <div class="card-body b-b">
-                           
-  <?php
- $edid=$_GET['eduid'];
-$ret=mysqli_query($con,"select tbluser.ID, tbleducation.UserID,tbleducation.SecondaryBoard,tbleducation.SecondaryBoardyop,tbleducation.SecondaryBoardper,tbleducation.SecondaryBoardcgpa,tbleducation.SSecondaryBoard,tbleducation.SSecondaryBoardyop,tbleducation.SSecondaryBoardper,tbleducation.SSecondaryBoardcgpa,tbleducation.GraUni,tbleducation.GraUniyop,tbleducation.GraUnidper,tbleducation.GraUnicgpa,tbleducation.PGUni,tbleducation.PGUniyop,tbleducation.PGUniper,tbleducation.PGUnicgpa,tbleducation.ExtraCurriculars,tbleducation.OtherAchivement  from   tbleducation join tbluser on tbleducation.UserID=tbluser.ID where tbleducation.UserID='$edid'");
+    <div class="container-fluid my-3">
+        <div class="row">
+            <div class="col-md-12">
+              
+                <div class="card my-3 no-b">
+                    <div class="card-body">
+                        <div class="card-title">History of applied Jobs</div>
+                        <table class="table table-bordered table-hover data-tables"
+                               data-options='{ "paging": false; "searching":false}'>
+                            <thead>
+                             <tr>
+                  <th>S.NO</th>
+            <th>Company Name</th>
+                  <th>Job Title</th>
+                    <th>Job Applied Date</th>
+                    <th>Status</th>       
+                   <th>Action</th>
+                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                             $cid=$_SESSION['crmsuid'];
+$ret=mysqli_query($con,"select tblapplyjob.ApplyDate,tblapplyjob.Status,tblapplyjob.ID as jid,tblvacancy.JobTitle,tblcompany.CompanyName from tblapplyjob join tblvacancy on tblapplyjob.JobId=tblvacancy.ID join tblcompany on tblcompany.ID=tblvacancy.CompanyID where tblapplyjob.UserId='$cid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-<table class="table table-bordered table-hover data-tables">
-  
-<tr>
-  <th>#</th>
-   <th>Board / University</th>
-    <th>Year</th>
-     <th>Percentage</th>
-       <th>CGPA</th>
-
-</tr>
-<tr>
-<th>10th(Secondary)</th>
-<td><?php  echo $row['SecondaryBoard'];?></td>
-<td><?php  echo $row['SecondaryBoardyop'];?></td>
-<td><?php  echo $row['SecondaryBoardper'];?></td>
-<td><?php  echo $row['SecondaryBoardcgpa'];?></td>
-</tr>
-<tr>
-<th>12th(Senior Secondary)</th>
-<td><?php  echo $row['SSecondaryBoard'];?></td>
-<td><?php  echo $row['SSecondaryBoardyop'];?></td>
-<td><?php  echo $row['SSecondaryBoardper'];?></td>
-<td><?php  echo $row['SSecondaryBoardcgpa'];?></td>
-</tr>
-<tr>
-<th>Graduation</th>
-<td><?php  echo $row['GraUni'];?></td>
-<td><?php  echo $row['GraUniyop'];?></td>
-<td><?php  echo $row['GraUnidper'];?></td>
-<td><?php  echo $row['GraUnicgpa'];?></td>
-
-</tr>
-<tr>
-<th>Post Graduation</th>
-<td><?php  echo $row['PGUni'];?></td>
-<td><?php  echo $row['PGUniyop'];?></td>
-<td><?php  echo $row['PGUniper'];?></td>
-<td><?php  echo $row['PGUnicgpa'];?></td>
-</tr>
-
-</table>
-<table class="table table-bordered table-hover data-tables">
-    <tr>
-<th>Extra Curriculars</th>
-<td> <?php  echo $row['ExtraCurriculars'];?></td>
-</tr>
-<tr>
-<th>Other Achivement/Certificate/Qualification</th>
-<td><?php  echo $row['OtherAchivement'];?></td>
-</tr>
-</table>
-<?php } ?>
-                        </div>
-              
+                           <tr>
+                  <td><?php echo $cnt;?></td>
+            <td><?php  echo $row['CompanyName'];?></td>
+                  <td><?php  echo $row['JobTitle'];?></td>
+                  <td><?php  echo $row['ApplyDate'];?></td>
+                  <td><?php if($row['Status']==''){
+echo "Not Responded Yet";} else { echo $row['Status']; } ;?>
+    
+</td>
+                  <td><a href="view-histroy-appliedjob.php?viewid=<?php echo $row['jid'];?>">View Details</a></td>
+                </tr>
+                <?php 
+$cnt=$cnt+1;
+}?>
+                          
+                            </tbody>
+                           
+                        </table>
                     </div>
                 </div>
-             
             </div>
+
         </div>
     </div>
 </div>
 
+<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
 <div class="control-sidebar-bg shadow white fixed"></div>
 </div>
 <!--/#app -->

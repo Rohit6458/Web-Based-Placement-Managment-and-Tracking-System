@@ -7,12 +7,13 @@ if (strlen($_SESSION['crmsuid']==0)) {
   } else{
 
 
+
   ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-   
-    <title>Campus Recruitment Management System-Education Detail</title>
+    
+    <title>Campus Recruitment Management System-Search Job</title>
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
@@ -85,100 +86,97 @@ if (strlen($_SESSION['crmsuid']==0)) {
 <?php include_once('includes/sidebar.php');?>
 <!--Sidebar End-->
 <?php include_once('includes/header.php');?>
-    <div class="page has-sidebar-left">
-    <header class="blue accent-3 relative">
+<div class="page has-sidebar-left bg-light height-full">
+    <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
-            <div class="row p-t-b-10 ">
+            <div class="row">
                 <div class="col">
-                    <h4>
-                        <i class="icon-package"></i>
-                        View Education Detail
-                    </h4>
+                    <h3 class="my-3">
+                       Search Job
+                    </h3>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="animatedParent animateOnce">
-        <div class="container-fluid my-3">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                    
-                        <div class="card-body b-b">
-                            <p>View Education Detail</p>
-                        </div>
-                        <div class="card-body b-b">
-                           
-  <?php
- $edid=$_GET['eduid'];
-$ret=mysqli_query($con,"select tbluser.ID, tbleducation.UserID,tbleducation.SecondaryBoard,tbleducation.SecondaryBoardyop,tbleducation.SecondaryBoardper,tbleducation.SecondaryBoardcgpa,tbleducation.SSecondaryBoard,tbleducation.SSecondaryBoardyop,tbleducation.SSecondaryBoardper,tbleducation.SSecondaryBoardcgpa,tbleducation.GraUni,tbleducation.GraUniyop,tbleducation.GraUnidper,tbleducation.GraUnicgpa,tbleducation.PGUni,tbleducation.PGUniyop,tbleducation.PGUniper,tbleducation.PGUnicgpa,tbleducation.ExtraCurriculars,tbleducation.OtherAchivement  from   tbleducation join tbluser on tbleducation.UserID=tbluser.ID where tbleducation.UserID='$edid'");
+    <div class="container-fluid my-3">
+        <div class="row">
+            <div class="col-md-12">
+              
+                <div class="card my-3 no-b">
+                    <div class="card-body">
+                        <form method="post">
+                                
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="inputEmail4" class="col-form-label"> Search Job by Title</label>
+                                        <input type="text" class="form-control" id="searchdata" name="searchdata" required="true" 
+                                               placeholder="Job Title">
+                                    </div>
+                                   
+                                </div>
+                               
+                                <button type="submit" class="btn btn-primary" name="search">Search</button>
+                            </form>
+                        <hr />
+                        <?php
+if(isset($_POST['search']))
+{ 
+
+$sdata=$_POST['searchdata'];
+  ?>
+  <h4 align="center">Result against "<?php echo $sdata;?>" keyword </h4> 
+                        <table class="table table-bordered table-hover data-tables"
+                               data-options='{ "paging": false; "searching":false}'>
+                            <thead>
+                             <tr>
+                  <th>S.NO</th>
+            
+                  <th>Job Title</th>
+                    <th>Job Posting Date</th>       
+                   <th>Action</th>
+                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                              
+$ret=mysqli_query($con,"select *from  tblvacancy where JobTitle like '%$sdata%'");
+$num=mysqli_num_rows($ret);
+if($num>0){
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-<table class="table table-bordered table-hover data-tables">
-  
-<tr>
-  <th>#</th>
-   <th>Board / University</th>
-    <th>Year</th>
-     <th>Percentage</th>
-       <th>CGPA</th>
+                           <tr>
+                  <td><?php echo $cnt;?></td>
+            
+                  <td><?php  echo $row['JobTitle'];?></td>
+                  <td><?php  echo $row['JobpostingDate'];?></td>
+                  <td><a href="view-vacancy-details.php?viewid=<?php echo $row['ID'];?>">Apply For Job</a></td>
+                </tr>
+                <?php 
+$cnt=$cnt+1;
+} } else { ?>
+  <tr>
+    <td colspan="8"> No record found against this search</td>
 
-</tr>
-<tr>
-<th>10th(Secondary)</th>
-<td><?php  echo $row['SecondaryBoard'];?></td>
-<td><?php  echo $row['SecondaryBoardyop'];?></td>
-<td><?php  echo $row['SecondaryBoardper'];?></td>
-<td><?php  echo $row['SecondaryBoardcgpa'];?></td>
-</tr>
-<tr>
-<th>12th(Senior Secondary)</th>
-<td><?php  echo $row['SSecondaryBoard'];?></td>
-<td><?php  echo $row['SSecondaryBoardyop'];?></td>
-<td><?php  echo $row['SSecondaryBoardper'];?></td>
-<td><?php  echo $row['SSecondaryBoardcgpa'];?></td>
-</tr>
-<tr>
-<th>Graduation</th>
-<td><?php  echo $row['GraUni'];?></td>
-<td><?php  echo $row['GraUniyop'];?></td>
-<td><?php  echo $row['GraUnidper'];?></td>
-<td><?php  echo $row['GraUnicgpa'];?></td>
-
-</tr>
-<tr>
-<th>Post Graduation</th>
-<td><?php  echo $row['PGUni'];?></td>
-<td><?php  echo $row['PGUniyop'];?></td>
-<td><?php  echo $row['PGUniper'];?></td>
-<td><?php  echo $row['PGUnicgpa'];?></td>
-</tr>
-
-</table>
-<table class="table table-bordered table-hover data-tables">
-    <tr>
-<th>Extra Curriculars</th>
-<td> <?php  echo $row['ExtraCurriculars'];?></td>
-</tr>
-<tr>
-<th>Other Achivement/Certificate/Qualification</th>
-<td><?php  echo $row['OtherAchivement'];?></td>
-</tr>
-</table>
-<?php } ?>
-                        </div>
-              
+  </tr>
+   
+<?php }} ?>
+                          
+                            </tbody>
+                           
+                        </table>
                     </div>
                 </div>
-             
             </div>
+
         </div>
     </div>
 </div>
 
+<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
 <div class="control-sidebar-bg shadow white fixed"></div>
 </div>
 <!--/#app -->

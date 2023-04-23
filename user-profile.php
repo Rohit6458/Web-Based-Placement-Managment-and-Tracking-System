@@ -139,28 +139,25 @@ while ($row=mysqli_fetch_array($ret)) {
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="inputEmail4" class="col-form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="fullname" name="fullname" value="<?php  echo $row['CompanyName'];?>" required='true'>
+                                        <input type="text" class="form-control" id="fullname" name="fullname" value="<?php  echo $row['FullName'];?>" required='true'>
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label for="inputPassword4" class="col-form-label">Email</label>
-                                        <input type="text" id="email" name="email" class="form-control" value="<?php  echo $row['ContactPerson'];?>" required='true'>
+                                        <input type="text" id="email" name="email" class="form-control" value="<?php  echo $row['Email'];?>" required='true'>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputAddress" class="col-form-label">Mobile Number</label>
-                                    <input type="text" id="mobilenumber" name="mobilenumber" class="form-control" value="<?php  echo $row['CompanyUrl'];?>" required='true'>
+                                    <input type="text" id="mobilenumber" name="mobilenumber" class="form-control" value="<?php  echo $row['MobileNumber'];?>" required='true'>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputAddress" class="col-form-label">Student ID</label>
-                                    <input type="text" id="stuid" name="stuid" class="form-control" value="<?php  echo $row['CompanyAddress'];?>" required='true'>
+                                    <input type="text" id="stuid" name="stuid" class="form-control" value="<?php  echo $row['StudentID'];?>" required='true'>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputAddress" class="col-form-label">Address</label>
-                                    <input type="text" id="add" name="add" class="form-control" value="<?php  echo $row['MobileNumber'];?>"  required='true'>
-                                </div>
+                                
                                 <div class="form-group">
               <label class="control-label">Gender: </label>
-              <?php  if($row['StaffGender']=="Female"){ ?>
+              <?php  if($row['Gender']=="Female"){ ?>
               <input type="radio" name="gender" id="gender" value="Female" checked="true">Female
               <input type="radio" name="gender" id="gender" value="male">Male
               <?php } else { ?>
@@ -170,17 +167,26 @@ while ($row=mysqli_fetch_array($ret)) {
               </label>
              <?php } ?>
             </div>
+            
+            <div class="form-group">
+                                    <label for="inputAddress" class="col-form-label">Address</label>
+                                    <input type="text" id="add" name="add" class="form-control" value="<?php  echo $row['Address'];?>"  required='true'>
+                                </div>
                                 <div class="form-group">
                                     <label for="inputAddress2" class="col-form-label">Photo</label>
-                                    <img src="images/<?php echo $row['Photo'];?>" width="200" height="150" value="<?php  echo $row['Photo'];?>"><a href="changeimage.php?editid=<?php echo $row['ID'];?>"> &nbsp; Edit Image</a>
+                                    <img src="images/<?php echo $row['Image'];?>" width="200" height="150" value="<?php  echo $row['Image'];?>"><a href="changeimage.php?editid=<?php echo $row['ID'];?>"> &nbsp; Upload Image</a>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputAddress2" class="col-form-label">Age</label>
-                                    <input type="text" id="age" name="age" class="form-control" value="<?php  echo $row['CompanyRegdate'];?>"  required='true'>
+                                    <input type="text" id="age" name="age" class="form-control" value="<?php  echo $row['Age'];?>"  required='true'>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputAddress2" class="col-form-label">Age</label>
-                                    <input type="date" id="dob" name="dob" class="form-control" value="<?php  echo $row['CompanyRegdate'];?>"  required='true'>
+                                    <label for="inputAddress2" class="col-form-label">Date of Birth</label>
+                                    <input type="date" id="dob" name="dob" class="form-control" value="<?php  echo $row['DOB'];?>"  required='true'>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputAddress2" class="col-form-label">Registration Date</label>
+                                    <input type="text" id="" name="" class="form-control" value="<?php  echo $row['UserRegdate'];?>"  readonly='true'>
                                 </div>
                                <?php } ?>
                                

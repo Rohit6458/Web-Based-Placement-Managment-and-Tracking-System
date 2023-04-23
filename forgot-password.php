@@ -8,7 +8,7 @@ if(isset($_POST['submit']))
     $contactno=$_POST['contactno'];
     $email=$_POST['email'];
 
-        $query=mysqli_query($con,"select ID from tblcompany where  CompanyEmail='$email' and MobileNumber='$contactno' ");
+        $query=mysqli_query($con,"select ID from tbluser where  Email='$email' and MobileNumber='$contactno' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
       $_SESSION['contactno']=$contactno;
@@ -126,8 +126,7 @@ if(isset($_POST['submit']))
                             <div class="col-lg-12">
                                 <input type="submit" class="btn btn-success btn-lg btn-block" name="submit" value="Reset">
                                 <p class="forget-pass text-white"><a href="login.php">Already have an account</a></p>
-                                <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p>
-                                
+                                <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p> 
                             </div>
                         </div>
                     </form>

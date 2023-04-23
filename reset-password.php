@@ -10,7 +10,7 @@ if(isset($_POST['submit']))
     $email=$_SESSION['email'];
     $password=md5($_POST['newpassword']);
 
-        $query=mysqli_query($con,"update tblcompany set Password='$password'  where  CompanyEmail='$email' && MobileNumber='$contactno' ");
+        $query=mysqli_query($con,"update tbluser set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
    if($query)
    {
 echo "<script>alert('Password successfully changed');</script>";
@@ -136,7 +136,7 @@ return true;
                             <div class="col-lg-12">
                                 <input type="submit" class="btn btn-success btn-lg btn-block" name="submit" value="Reset">
                                 <p class="forget-pass text-white"><a href="login.php">Already have an account</a></p>
-                                <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p>
+                                 <p class="forget-pass text-white"><a href="../index.php"> Back to Home!!</a></p>
                             </div>
                         </div>
                     </form>
